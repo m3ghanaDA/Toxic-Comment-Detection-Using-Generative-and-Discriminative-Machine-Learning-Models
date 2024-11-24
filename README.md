@@ -1,138 +1,134 @@
-1. Problem Definition
-The goal of this project is to detect toxic comments in online forums automatically using machine learning models. Toxic speech on online platforms violates community guidelines and can negatively impact user experience. The task involves performing binary classification to label comments as either toxic or non-toxic, fulfilling both legal compliance and user satisfaction requirements.
+# Toxic Comment Detection in Online Forums
 
+## 1. Problem Definition
+### Objective
+Develop machine learning models to automatically classify comments as **toxic** or **non-toxic**, ensuring compliance with community guidelines and improving user experience.
 
+### Task
+Binary classification of comments for toxicity detection.
 
-2. Data Collection and Understanding
-The dataset used for this project consists of three parts: training, validation, and test sets, each containing comments and toxicity labels (except the test set). The training set includes 8699 comments, with 13% toxic and 87% non-toxic, highlighting a significant class imbalance problem. The project focuses on processing text data (comments) to detect toxicity effectively.
+---
 
-Dataset Breakdown:
+## 2. Data Collection and Understanding
+### Dataset
+- **Training Set**: 8699 comments (13% toxic, 87% non-toxic)
+- **Validation Set**: 2920 comments (13.15% toxic, 86.85% non-toxic)
+- **Test Set**: 2896 comments (labels unavailable for testing).
 
-Training set: 8699 comments, 13% toxic
+### Key Challenge
+Significant class imbalance: Majority of comments are non-toxic.
 
-Validation set: 2920 comments, 13.15% toxic
+---
 
-Test set: 2896 comments (no toxicity labels provided)
+## 3. Data Preprocessing
+### Steps
+1. **Text Normalization**:
+   - Converted text to lowercase.
+   - Removed stopwords, punctuation, and special characters.
+   - Performed lemmatization to reduce words to their root forms.
+   - Filtered non-ASCII characters and removed short words (< 3 characters).
 
+2. **Class Imbalance Handling**:
+   - Undersampled the majority class (non-toxic) by 35%.
+   - Final distribution: 81.5% non-toxic, 18.5% toxic.
 
+---
 
-3. Data Preprocessing
-Data preprocessing is essential for preparing the raw text for machine learning models. The steps performed include:
+## 4. Exploratory Data Analysis (EDA)
+### Insights
+- **Comment Length**: Most comments are short, with few exceeding 100 words.
+- **Class Imbalance**: Visualized distribution confirmed high imbalance.
+- **Common Toxic Words**: Word clouds and frequency charts highlighted common toxic terms.
 
-Lowercasing the text
+---
 
-Removing stopwords using NLTK’s stopword list
+## 5. Feature Engineering
+### Methods
+- **Bag-of-Words (BoW)**: Used for numerical feature representation.
+- **TF-IDF**: Tested but did not outperform BoW, so BoW was selected for simplicity and effectiveness.
 
-Stripping punctuation and special characters using regular expressions
+---
 
-Lemmatizing the words to convert them to their root form
+## 6. Model Selection and Training
+### Models
+1. **Naive Bayes** (Generative):
+   - Laplace smoothing (alpha = 0.1) applied.
+   - Optimized class prior probabilities.
 
-Filtering non-ASCII characters to clean the dataset
+2. **Logistic Regression** (Discriminative):
+   - Hyperparameter tuning with solvers, class weights, and optimizers.
 
-Removing short words (length less than 3 characters)
+3. **Support Vector Machine (SVM)**:
+   - Linear kernel with tuned parameters: regularization (C=5), class weights, and intercept scaling.
 
-A key challenge addressed during preprocessing was the class imbalance, which was handled by undersampling the majority class (non-toxic comments) by removing 35% of the non-toxic rows, leading to a more balanced dataset (81.5% non-toxic, 18.5% toxic).
+### Optimization
+- **GridSearchCV**: Used 5-fold cross-validation, optimizing for F1-score to balance precision and recall.
 
+---
 
+## 7. Model Evaluation
+### Metrics
+- **Accuracy**: Overall correct predictions.
+- **F1-Score**: Balances precision and recall for imbalanced datasets.
+- **Precision**: Proportion of true positives among predicted positives.
+- **Recall**: Proportion of true positives among actual positives.
 
-4. Exploratory Data Analysis (EDA)
-After preprocessing, visualizations were performed to understand the data better:
+### Results
+| Model                | Accuracy | F1-Score | Precision | Recall  |
+|----------------------|----------|----------|-----------|---------|
+| **Naive Bayes**      | Moderate | Lower    | Lower     | Lower   |
+| **Logistic Regression** | Similar to NB | Moderate | Slightly lower recall |
+| **SVM**              | **Highest** | **Best Balance** | **Best Performance** |
 
-Comment Length Distribution: Most comments were relatively short, with very few longer than 100 words.
+- **SVM**: Outperformed other models with the highest F1-score, precision, and recall, making it the best-performing model.
 
-Class Imbalance Visualization: Confirmed the high imbalance between toxic and non-toxic comments.
+---
 
-Common Words in Toxic Comments: Created a word cloud or frequency distribution of words that commonly appear in toxic comments.
+## 8. Prediction and Analysis
+### Test Set Predictions
+- **Naive Bayes**: Predicted 619 toxic comments.
+- **SVM**: Predicted 1005 toxic comments.
 
-This EDA helped uncover patterns in the data and informed later steps in model building and feature engineering.
+### Observations
+- SVM outperformed Naive Bayes in capturing subtle nuances of toxicity.
+- Some false negatives occurred due to nuanced or implicit toxic language.
 
+---
 
+## 9. Conclusions and Insights
+- **Best Model**: Support Vector Machine (SVM) due to its superior performance in balancing precision and recall.
+- **Challenges**: 
+  - Class imbalance posed a significant challenge, partly mitigated by undersampling.
+  - Subtle nuances in toxic language require advanced modeling for full capture.
 
-5. Feature Engineering
-For feature extraction, the Bag-of-Words (BoW) approach was employed, converting the text data into numerical features based on word frequencies. Although TF-IDF (Term Frequency-Inverse Document Frequency) was also tried, it did not yield better results than BoW. BoW was selected for its simplicity and effectiveness in text classification tasks.
+---
 
+## 10. Future Work
+1. **Advanced Text Representations**:
+   - Implement word embeddings (e.g., Word2Vec, GloVe).
+   - Explore contextual models like BERT or RoBERTa.
 
+2. **Ensemble Methods**:
+   - Use stacking or boosting to combine model strengths.
 
-6. Model Selection and Training
-Both generative and discriminative machine learning models were explored for text classification:
+3. **Data Augmentation**:
+   - Apply oversampling (e.g., SMOTE) or cost-sensitive learning.
 
-Generative Model: Naive Bayes
+4. **Feature Engineering**:
+   - Include user metadata and conversation context for enhanced insights.
 
-Discriminative Models: Logistic Regression and Support Vector Machine (SVM)
+---
 
-Model Training and Hyperparameter Tuning:
+## 11. Lessons Learned
+### Key Takeaways
+- **Model Transparency**:
+  - Simpler models like Naive Bayes and Logistic Regression are more interpretable but less effective for nuanced tasks.
+- **Imbalance Handling**:
+  - Addressing class imbalance is crucial in real-world classification problems.
+- **Preprocessing Importance**:
+  - Effective text preprocessing has a significant impact on model performance.
 
-Naive Bayes: Tuned with Laplace smoothing (alpha = 0.1) and class prior probabilities.
+---
 
-Logistic Regression: Tuned using GridSearchCV with different solvers, class weights (to handle imbalance), and optimization techniques.
-
-SVM: A linear SVM was used with hyperparameters tuned for regularization (C=5), class weights, and intercept scaling.
-
-GridSearchCV with cross-validation (5 splits) was employed for all models, optimizing based on the F1-score, which balances precision and recall, especially important in this imbalanced classification problem.
-
-
-
-7. Model Evaluation
-The models were evaluated based on the following metrics:
-
-Accuracy
-
-F1-score (macro)
-
-Precision (macro)
-
-Recall (macro)
-
-Model Performance:
-
-Naive Bayes: Moderate performance with reasonable accuracy but lower precision and recall.
-
-Logistic Regression: Similar performance to Naive Bayes, with slightly lower recall.
-
-SVM: Achieved the highest F1-score and offered the best balance between precision and recall, making it the state-of-the-art (SoTA) model for this project.
-
-
-
-8. Prediction and Analysis
-Once the models were trained, they were used to make predictions on the test set:
-
-Naive Bayes: Predicted 619 toxic comments (out of 2896) in the test set.
-
-SVM: Predicted 1005 toxic comments.
-
-Example Analysis:
-
-For some instances, both models failed to capture toxicity due to subtle language nuances.
-
-In other cases, SVM performed better in correctly identifying aggressive or toxic comments, demonstrating superior performance.
-
-
-
-9. Conclusions and Insights
-The Support Vector Machine (SVM) emerged as the best-performing model for this task, striking a balance between precision and recall, making it well-suited for toxic comment detection in real-world scenarios. However, there were some areas for improvement:
-
-Class imbalance posed a challenge that was addressed through undersampling, though other techniques (like SMOTE) could be explored.
-
-Naive Bayes and Logistic Regression were more transparent but less effective than SVM.
-
-
-
-10. Future Work
-The project could be extended by exploring the following:
-
-Advanced Text Representations: Implementing word embeddings (e.g., Word2Vec, GloVe) or contextual language models (e.g., BERT, RoBERTa) could improve model performance by capturing deeper semantic relationships.
-
-Ensemble Methods: Techniques like stacking or boosting could combine the strengths of multiple models to improve prediction accuracy.
-
-Data Augmentation: Handling the class imbalance using oversampling methods like SMOTE or applying cost-sensitive learning could enhance model robustness.
-
-Feature Engineering: Additional features like user metadata or conversation context could be incorporated to better detect toxic behavior.
-
-
-
-11. Lessons Learned
-Model Transparency: While deep learning models could have been explored, simpler models like Naive Bayes and Logistic Regression were preferred for their transparency and interpretability, which is critical for identifying biases in toxic speech detection.
-
-Imbalance Handling: Handling imbalanced datasets is key in real-world text classification problems, and experimenting with different techniques to balance classes should be prioritized.
-
-Text Preprocessing: High-quality text preprocessing significantly impacts model performance and is a vital step in any natural language processing (NLP) project.
+## Appendix
+- Code and results are available upon request.
