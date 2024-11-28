@@ -128,7 +128,4 @@ Significant class imbalance: Majority of comments are non-toxic.
 - **Preprocessing Importance**:
   - Effective text preprocessing has a significant impact on model performance.
 
----
 
-## Appendix
-- Code and results are available upon request.
